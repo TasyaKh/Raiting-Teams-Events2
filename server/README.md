@@ -5,7 +5,7 @@
 ![image](https://user-images.githubusercontent.com/74527737/222896661-048ae0a0-723c-40ee-886a-be53151b1b9c.png)
 
 
-## Установка
+## Установка через npm
 
 ```bash
 $ npm install
@@ -13,7 +13,13 @@ $ npm install
 $ npm install --save @nestjs/typeorm typeorm postgres
 ```
 
-#### Так же необходимо иметь PostgreSQL с развернутым бэкапом БД
+## Установка через yarn
+
+```bash
+$ yarn && yarn start
+```
+
+#### Так же необходимо иметь PostgreSQL с развернутым бэкапом БД (pgadmin) (windows)
 backup.sql файл в папке server
 
 1. Создаем пустую БД с названием raiting_teams_events
@@ -31,23 +37,52 @@ backup.sql файл в папке server
      \i 'C:/Users/Yulia/Study/Raiting-Teams-Events/backup.sql'
 
 
-#### Файл .env (настройка подкл. к БД)
-Нужно создать файл .env в папке server, примерно след вида:
+#### Подготовка БД через консоль (linux)
 
-DB_NAME=raiting_team_events
-DB_USER=postgres
-DB_PASSWORD=root
-DB_HOST=localhost
-DB_PORT=5432
-
-SESSION_SECRET=my-secret
-
-## Running the app
-запуск сервера
-```bash
-npm run start:dev
+1. установить postgresql, например v14.9
+2. зайти под psql
+```
+$ sudo -u postgres psql
 ```
 
+3. создать БД
+
+```
+# create DATABASE raiting_team_events;
+```
+
+4. установить дефолтный пароль для СУБД к БД
+
+```
+# ALTER USER postgres WITH PASSWORD 'root';
+```
+
+5. выйти из под psql
+
+```
+# \q
+```
+
+6. заполнить БД бэкапом
+```
+sudo -u postgres psql -d raiting_team_events < backup.sql
+```
+
+#### Файл .env (настройка подкл. к БД)
+Нужно переименовать файл .env.example в папке server в .env и изменить конфигурацию при необходимости
+
+## Running the app
+
+### npm
+запуск сервера
+```bash
+$ кnpm run start:dev
+```
+
+### yarn
+```bash
+$ yarn start
+```
 
 # Доп. инфа
 
