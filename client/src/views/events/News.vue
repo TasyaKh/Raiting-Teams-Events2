@@ -31,7 +31,7 @@
       <div class="cards__container ms-md-4">
         <!-- Поисковые строки -->
         <div class="cards__search">
-          <Search :handleTimerSearch="handleTimerSearch"/>
+          <Search :handleTimerSearch="handleTimerSearch" />
           <input class="date__search" placeholder="Выберите дату" type="date" />
           <Switch_toggle />
           <div class="d-md-none">
@@ -89,7 +89,6 @@
   <div v-if="(selectedItem === 2)">
     <UserEvents :idUser="permissions_store.user_id" />
   </div>
-
 </template>
 
 <script setup lang="ts">
@@ -108,7 +107,7 @@ import Search from '@/components/Search.vue';
 
 const eventStore = useEventStore();
 const teamStore = useTeamStore();
-const menu_items = eventStore.menu_items;
+const menu_items = ref()
 const permissions_store = usePermissionsStore();
 const can = permissions_store.can;
 const data = ref()
@@ -136,6 +135,7 @@ const findEventTxt = ref()
 
 onBeforeMount(async () => {
   await fetchEvents()
+  menu_items.value = await eventStore.getMenuItems();
 })
 
 async function handleTimerSearch(eventTxt: string) {
@@ -153,9 +153,9 @@ async function fetchEvents() {
   loading.value = true
 
   let event = new Event()
-    event.limit = limit
-    event.offset = offset.value
-    event.search_text = findEventTxt.value
+  event.limit = limit
+  event.offset = offset.value
+  event.search_text = findEventTxt.value
 
   let d = await eventStore.fetchEvents(event)
   data.value = d[0]
@@ -184,13 +184,12 @@ function handleEventResetFilters() {
 </script>
 
 <style lang="scss" scoped>
-
 .events__container {
   display: flex;
   padding-top: 1rem;
 
   .cards__container {
-   
+
     width: 100%;
 
     .cards__search {
