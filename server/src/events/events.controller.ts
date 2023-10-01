@@ -84,7 +84,7 @@ export class EventsController {
   @ApiResponse({ status: HttpStatus.OK, description: "Успешно", type: [Event] })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: "Bad Request" })
   findAllEvents(@Query() searchEvent: SearchEventDto) {
-
+  
     return this.eventsService.findAllEvents(searchEvent);
   }
 

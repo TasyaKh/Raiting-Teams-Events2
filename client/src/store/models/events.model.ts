@@ -1,13 +1,16 @@
-import { Status, Type } from "../enums/enum_event"
+import { Status } from "../enums/enum_event"
 
 export class Event {
 
-    type?: Type = Type.OUTSIDE
+    type?: number
     status?: Status = Status.ACCEPTED
     direction?: any
     user_id?: number
     search_text?:string
-
+   
     limit = 5
     offset = 0
+    // addition
+    levels?:number[]
+    types?:number[]
 }

@@ -3,7 +3,7 @@ import axios from "axios";
 import { Status, Type } from "./enums/enum_event";
 import type { Event } from "./models/events.model";
 import { useDictionaryStore } from "./dictionary_store";
-import { EVENT_LEVEL } from "./constants/constants_class_names";
+import { EVENT_LEVEL, EVENT_TYPE } from "./constants/constants_class_names";
 
 export const useEventStore = defineStore("events", () => {
 
@@ -14,7 +14,7 @@ export const useEventStore = defineStore("events", () => {
 
     let params = {
       ...event,
-      type: event.type != Type.ALL ? event.type : null,
+      type: event.type,
       status: event.status != Status.ALL ? event.status : null,
       search_txt: event.search_text
     }
@@ -146,79 +146,82 @@ export const useEventStore = defineStore("events", () => {
     return res
   }
 
-  // получить меню для мероприятий
+  // получить меню для мероприятий со словаря
   async function getMenuItems() {
-    let dictionary = await dictionaryStore.getFromDictionaryByClassID(EVENT_LEVEL)
 
+    let indexMenu = 0
+    const menu_items:any = []
 
-    const menu_items = [
-      {
-        id: 1, title: 'Формат проведения', menu_types: [
-          { id: 1, title: 'Online', checked: true },
-          { id: 2, title: 'Offline', checked: true },
-        ]
-      },
-    ]
+    let fillMenu = async (dictClassId: number, menuTitle: string) => {
+     
+      let dictionary = await dictionaryStore.getFromDictionaryByClassID(dictClassId)
 
-    //получить уровень мероприятия с БД
-    let menu_types = []
-    for (let i = 0; i < dictionary.length; i++) {
-      menu_types.push(
-        { id: dictionary[i].id, title: dictionary[i].name, checked: true }
-      )
+      //получить уровень мероприятия с БД
+      let menu_types = []
+      for (let i = 0; i < dictionary.length; i++) {
+        menu_types.push(
+          // id со словаря, название, ставить галочку
+          { id: dictionary[i].id, title: dictionary[i].name, checked: true }
+        )
+      }
+
+      menu_items.push({ id: indexMenu, title: menuTitle, menu_types: menu_types })
+      indexMenu++
     }
 
-    menu_items.push({ id: 2, title: 'Уровень', menu_types: menu_types })
+    await fillMenu(EVENT_TYPE, "Тип")
+    await fillMenu(EVENT_LEVEL, "Уровень")
+
     return menu_items
   }
 
 
 
-  const menu_items = [
-    {
-      id: 1, title: 'Формат проведения', menu_types: [
-        { id: 1, title: 'Online', checked: true },
-        { id: 2, title: 'Offline', checked: true },
-      ]
-    },
-    {
-      id: 2, title: 'Уровень', menu_types: [
-        { id: 1, title: 'Внутривузовский', checked: true },
-        { id: 2, title: 'Межвузовский', checked: true },
-        { id: 3, title: 'Региональный', checked: true },
-        { id: 4, title: 'Всероссийский', checked: true },
-      ]
-    },
+  // const menu_items = [
+  //   {
+  //     id: 1, title: 'Формат проведения', menu_types: [
+  //       { id: 1, title: 'Online', checked: true },
+  //       { id: 2, title: 'Offline', checked: true },
+  //     ]
+  //   },
+  //   {
+  //     id: 2, title: 'Уровень', menu_types: [
+  //       { id: 1, title: 'Внутривузовский', checked: true },
+  //       { id: 2, title: 'Межвузовский', checked: true },
+  //       { id: 3, title: 'Региональный', checked: true },
+  //       { id: 4, title: 'Всероссийский', checked: true },
+  //     ]
+  //   },
 
-    // {
-    //   id: 3, title: 'Институт', hidden: true, menu_types: [
-    //     { id: 1, title: 'Авиамашиностроения и транспорта' },
-    //     { id: 2, title: 'Архитектуры, строительства и дизайна' },
-    //     { id: 3, title: 'Высоких технологий' },
-    //     { id: 4, title: 'Информационных технологий и анализа даных' },
-    //     { id: 5, title: 'Квантовой физики' },
-    //     { id: 6, title: 'Лингвистики и межкультурной коммуникации' },
-    //     { id: 7, title: 'Недропользования' },
-    //     { id: 8, title: 'Экономики, управления и права' },
-    //     { id: 9, title: 'Энергетики' },
-    //     { id: 10, title: 'БРИКС' },
-    //   ]
-    // },
-    // {
-    //   id: 4, title: 'Курс', hidden: true, menu_types: [
-    //     { id: 1, title: '1 курс' },
-    //     { id: 2, title: '2 курс' },
-    //     { id: 3, title: '3 курс' },
-    //     { id: 4, title: '4 курс' },
-    //     { id: 5, title: '5 курс' },
-    //     { id: 6, title: 'Магистратура' },
-    //   ]
-    // }
-  ]
+  // {
+  //   id: 3, title: 'Институт', hidden: true, menu_types: [
+  //     { id: 1, title: 'Авиамашиностроения и транспорта' },
+  //     { id: 2, title: 'Архитектуры, строительства и дизайна' },
+  //     { id: 3, title: 'Высоких технологий' },
+  //     { id: 4, title: 'Информационных технологий и анализа даных' },
+  //     { id: 5, title: 'Квантовой физики' },
+  //     { id: 6, title: 'Лингвистики и межкультурной коммуникации' },
+  //     { id: 7, title: 'Недропользования' },
+  //     { id: 8, title: 'Экономики, управления и права' },
+  //     { id: 9, title: 'Энергетики' },
+  //     { id: 10, title: 'БРИКС' },
+  //   ]
+  // },
+  // {
+  //   id: 4, title: 'Курс', hidden: true, menu_types: [
+  //     { id: 1, title: '1 курс' },
+  //     { id: 2, title: '2 курс' },
+  //     { id: 3, title: '3 курс' },
+  //     { id: 4, title: '4 курс' },
+  //     { id: 5, title: '5 курс' },
+  //     { id: 6, title: 'Магистратура' },
+  //   ]
+  // }
+  // ]
 
   return {
     getMenuItems,
-    menu_items,
+    // menu_items,
     fetchEvents,
     fetchEventById,
     deleteEvent,

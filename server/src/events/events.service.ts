@@ -110,11 +110,19 @@ export class EventsService {
 
     // event type
     searchEvent.type != null ? buildQuery
-      .andWhere("type.name = :type", { type: searchEvent.type }) : buildQuery
+      .andWhere("type.id = :type", { type: searchEvent.type }) : buildQuery
+
+    searchEvent.types.length > 0 ? buildQuery
+      .andWhere("type.id in (:...types)", { types: searchEvent.types }) : buildQuery
+
 
     // event level
     searchEvent.level != null ? buildQuery
-      .andWhere("events.level = :level", { level: searchEvent.level }) : buildQuery
+      .andWhere("level.id = :level", { level: searchEvent.level }) : buildQuery
+
+    searchEvent.levels.length > 0 ? buildQuery
+      .andWhere("level.id in (:...levels)", { levels: searchEvent.levels }) : buildQuery
+
 
     // event direction
     searchEvent.direction != null ? buildQuery

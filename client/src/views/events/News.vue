@@ -1,3 +1,123 @@
+<script setup lang="ts">
+import Switch_toggle from '@/components/Switch_toggle.vue';
+import CheckBox_Menu from '@/components/CheckBox_Menu.vue';
+import { useEventStore } from "@/store/events_store";
+import { onBeforeMount, ref } from 'vue';
+import { usePermissionsStore } from '@/store/permissions_store';
+import Pagination from '@/components/Pagination.vue';
+import EventsRequests from './EventsRequests.vue';
+import { useTeamStore } from '@/store/team_store';
+import ModalFull from '@/components/modals/ModalFull.vue';
+import { Event } from '@/store/models/events.model';
+import UserEvents from '../user/UserEvents.vue';
+import Search from '@/components/Search.vue';
+
+const eventStore = useEventStore();
+const teamStore = useTeamStore();
+const menu_items = ref()
+const permissions_store = usePermissionsStore();
+const can = permissions_store.can;
+const data = ref<any>([])
+
+// загрузка
+const loading = ref(false)
+
+//pagination ---------------------------------------------------------------------
+const limit = 5 //сколько  отображается на странице
+const offset = ref(0) //сколько  пропустить прежде чем отобразить
+
+const maxPages = ref(1)
+const visiblePages = 7
+//pagination ---------------------------------------------------------------------
+
+const itemList = [
+  { name: "Главная", permission: true },
+  { name: "Заявки на создание", permission: can('can edit status events') },
+  { name: "Мои мероприятия", permission: can('can create events') },
+]
+
+const selectedItem = ref(0);
+const findEventTxt = ref()
+
+
+onBeforeMount(async () => {
+  menu_items.value = await eventStore.getMenuItems();
+  await fetchEvents()
+})
+
+async function handleTimerSearch(eventTxt: string) {
+  findEventTxt.value = eventTxt
+
+  await fetchEvents()
+}
+
+const selectItem = (i: number) => {
+  selectedItem.value = i
+}
+
+async function fetchEvents() {
+
+  loading.value = true
+
+  let event = new Event()
+  event.limit = limit
+  event.offset = offset.value
+  event.search_text = findEventTxt.value
+  setFilter(event)
+  // loop throught menu
+  // console.log(event)
+
+
+  let d = await eventStore.fetchEvents(event)
+  data.value = d[0]
+
+  const eventsCount = d[1]
+  maxPages.value = eventsCount >= limit ? Math.ceil(eventsCount / limit) : 1
+  loading.value = false
+
+}
+
+// задать фильттр из меню с фильтрами
+function setFilter(event: Event) {
+  menu_items.value.forEach((menuItem: any) => {
+    let ids = []
+    switch (menuItem.id) {
+      case 0:
+        ids = menuItem.menu_types
+          .filter((item: { checked: any; }) => item.checked)
+          .map((item: { id: any; }) => item.id);
+        event.types = ids
+        break
+      case 1:
+
+        ids = menuItem.menu_types
+          .filter((item: { checked: any; }) => item.checked)
+          .map((item: { id: any; }) => item.id);
+        event.levels = ids
+        break
+    }
+  })
+}
+
+async function handleEventChangePage(currentPage: number) {
+  offset.value = (currentPage - 1) * limit
+
+  await fetchEvents()
+}
+
+// задать фильтры
+async function handleEventSetFilters() {
+  await fetchEvents()
+}
+
+// сбросить фильтры
+async function handleEventResetFilters() {
+  menu_items.value = await eventStore.getMenuItems();
+  await fetchEvents()
+}
+
+</script>
+
 <template>
   <!-- Навигация -->
   <div class="wrapper-news__navigation">
@@ -90,98 +210,6 @@
     <UserEvents :idUser="permissions_store.user_id" />
   </div>
 </template>
-
-<script setup lang="ts">
-import Switch_toggle from '@/components/Switch_toggle.vue';
-import CheckBox_Menu from '@/components/CheckBox_Menu.vue';
-import { useEventStore } from "@/store/events_store";
-import { onBeforeMount, ref } from 'vue';
-import { usePermissionsStore } from '@/store/permissions_store';
-import Pagination from '@/components/Pagination.vue';
-import EventsRequests from './EventsRequests.vue';
-import { useTeamStore } from '@/store/team_store';
-import ModalFull from '@/components/modals/ModalFull.vue';
-import { Event } from '@/store/models/events.model';
-import UserEvents from '../user/UserEvents.vue';
-import Search from '@/components/Search.vue';
-
-const eventStore = useEventStore();
-const teamStore = useTeamStore();
-const menu_items = ref()
-const permissions_store = usePermissionsStore();
-const can = permissions_store.can;
-const data = ref()
-
-// загрузка
-const loading = ref(false)
-
-//pagination ---------------------------------------------------------------------
-const limit = 5 //сколько  отображается на странице
-const offset = ref(0) //сколько  пропустить прежде чем отобразить
-
-const maxPages = ref(1)
-const visiblePages = 7
-//pagination ---------------------------------------------------------------------
-
-const itemList = [
-  { name: "Главная", permission: true },
-  { name: "Заявки на создание", permission: can('can edit status events') },
-  { name: "Мои мероприятия", permission: can('can create events') },
-]
-
-const selectedItem = ref(0);
-const findEventTxt = ref()
-
-
-onBeforeMount(async () => {
-  await fetchEvents()
-  menu_items.value = await eventStore.getMenuItems();
-})
-
-async function handleTimerSearch(eventTxt: string) {
-  findEventTxt.value = eventTxt
-
-  await fetchEvents()
-}
-
-const selectItem = (i: number) => {
-  selectedItem.value = i
-}
-
-async function fetchEvents() {
-
-  loading.value = true
-
-  let event = new Event()
-  event.limit = limit
-  event.offset = offset.value
-  event.search_text = findEventTxt.value
-
-  let d = await eventStore.fetchEvents(event)
-  data.value = d[0]
-
-  const eventsCount = d[1]
-  maxPages.value = eventsCount >= limit ? Math.ceil(eventsCount / limit) : 1
-  loading.value = false
-
-}
-
-async function handleEventChangePage(currentPage: number) {
-  offset.value = (currentPage - 1) * limit
-
-  await fetchEvents()
-}
-
-// задать фильтры
-async function handleEventSetFilters() {
-
-}
-
-// сбросить фильтры
-function handleEventResetFilters() {
-}
-
-</script>
 
 <style lang="scss" scoped>
 .events__container {

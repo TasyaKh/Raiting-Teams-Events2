@@ -66,6 +66,13 @@ export class SearchEventDto {
     // additional
     @IsOptional()
     search_txt: string
+
+    @IsOptional()
+    levels: number[] = []
+    
+    @IsOptional()
+    types: number[] = []
+    
 }
 
 
