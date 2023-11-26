@@ -46,6 +46,7 @@ import { UserFunctionDto } from '../users/dto/user-functions.dto';
 import { AssignDirectionTeamLeaderDto } from '../users/dto/direction-leader.dto';
 import { TeamRoles } from '../shared/teamRoles';
 import { extname } from 'path';
+import { UpdateTeamDirectorDto } from './dto/update-team-director.dto';
 
 @ApiTags('teams') //<---- Отдельная секция в Swagger для всех методов контроллера
 @Controller('teams')
@@ -167,6 +168,40 @@ export class TeamsController {
     updateTeamDto.document = docPath;
 
     return await this.teamsService.update(user, id, updateTeamDto);
+  }
+
+  @Put(':id/director')
+  @ApiOperation({
+    summary: 'Обновить коллектив (руководитель)',
+  })
+  @UseInterceptors(FilesInterceptor('files'))
+  async updateDirector(
+    @Param('id') id: number,
+    @Body() dto: UpdateTeamDirectorDto,
+  ) {
+    return await this.teamsService.updateDirector(id, dto);
+  }
+
+  @Put(':id/images')
+  @UseInterceptors(FilesInterceptor('files'))
+  async updateImages(
+    @Req() request: Request,
+    @Param('id') id: number,
+    @UploadedFiles(new FileSizeValidationPipe()) files: Express.Multer.File[],
+  ) {
+    const startPathUrl = `${request.protocol}://${request.get('host')}`;
+
+    const filePaths = await Promise.all(
+      files.map(async (file) => {
+        const path = await this.uploadsService.uploadImage(
+          startPathUrl,
+          file.buffer,
+        );
+        return path;
+      }),
+    );
+
+    return this.teamsService.updateImages(id, filePaths);
   }
 
   //по ид команды найти всех юзеров

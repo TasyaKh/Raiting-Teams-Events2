@@ -29,6 +29,7 @@ import { PermissionsRoles, Roles } from '../shared/permissionsRoles';
 import { TeamRoles } from '../shared/teamRoles';
 import { PermissionsActions } from '../general/enums/action-permissions';
 import { TeamFunction } from '../users/entities/function.entity';
+import { UpdateTeamDirectorDto } from './dto/update-team-director.dto';
 
 @Injectable()
 export class TeamsService {
@@ -111,6 +112,17 @@ export class TeamsService {
     }
 
     return updatedTeam;
+  }
+
+  async updateDirector(id: number, dto: UpdateTeamDirectorDto) {
+    return await this.teamsRepository.update(id, { ...dto });
+  }
+
+  async updateImages(id: number, filePaths: string[]): Promise<Team> {
+    const team = await this.findOne(id);
+    team.image = [...team.image, ...filePaths];
+
+    return await this.teamsRepository.save(team);
   }
 
   //создать коллектив, с учетом, что есь минимум 1 лидер

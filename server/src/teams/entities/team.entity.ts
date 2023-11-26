@@ -75,6 +75,22 @@ export class Team {
   @Column({ default: true })
   set_open: boolean;
 
+  @ApiProperty()
+  @Column({ nullable: true })
+  phoneNumber: string;
+
+  @ApiProperty()
+  @Column('simple-array')
+  linksSocialNetwork: string[];
+
+  @ApiProperty()
+  @Column({ nullable: true })
+  address: string;
+
+  @ApiProperty()
+  @Column({ nullable: true })
+  officeHours: string;
+
   @ManyToOne(() => Team, (team) => team.id)
   @JoinColumn([{ name: 'id_parent' }])
   id_parent: Team;
