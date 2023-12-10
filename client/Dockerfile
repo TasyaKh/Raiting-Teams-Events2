@@ -1,18 +1,20 @@
-FROM node:16
+FROM node:16.20.2-alpine3.18 AS build-stage
 
 WORKDIR /src
 
-COPY package*.json ./
-
-RUN npm install
+COPY package*.json .
 
 COPY . .
 
-# RUN npm run build
+COPY . .
 
-CMD [ "npm", "run", "dev", "--", "--host", "0.0.0.0" ]
+RUN yarn run build
 
-# FROM nginx AS production-stage
-# RUN mkdir /app
-# COPY --from=build-stage /app/dist /app
+# CMD [ "npm", "run", "dev", "--", "--host", "0.0.0.0" ]
+# CMD [ "yarn", "run", "dev", "--host", "0.0.0.0" ]
+
+FROM nginx:1.25.3-alpine AS production-stage
+COPY --from=build-stage /src/dist /usr/share/nginx/html
 # COPY nginx.conf /etc/nginx/nginx.conf
+# EXPOSE 3001
+CMD ["nginx", "-g", "daemon off;"]

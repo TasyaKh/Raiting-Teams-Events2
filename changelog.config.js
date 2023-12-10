@@ -35,7 +35,7 @@ const commitTypeList = {
     description: 'Markup, white-space, formatting, missing semi-colons...',
     emoji: '🎨',
   },
-  wip: {
+  temp: {
     description: 'Work in progress',
     emoji: '🚧',
   },
