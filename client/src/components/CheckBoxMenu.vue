@@ -16,7 +16,7 @@
           type="checkbox"
           class="checkbox"
           v-model="menu_type.checked"
-          v-bind="menu_type.id"
+          v-bind:key="menu_type.id"
         />
         <span class="fake"></span>
         <span class="span__title">{{ menu_type.title }}</span>
@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-  menu_items: unknown;
+  menu_items: {id: number, title: string, hidden: boolean, menu_types: {id: number, title: string, checked: boolean}[]}[];
   handleEventSetFilters: () => void; //обработчик отправки фильтров
   handleEventResetFilters: () => void;
 }>();

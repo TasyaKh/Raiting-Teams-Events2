@@ -104,8 +104,8 @@ async function createFormFields(
     });
     return response.data.id.toString();
   } catch (error) {
-    if (error.response) {
-      responseMsg.value = error.response.data.message;
+    if (axios.isAxiosError(error)) {
+      responseMsg.value = error.response?.data.message;
     }
     return null;
   }

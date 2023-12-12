@@ -254,9 +254,7 @@ async function onTextChange(e: InputEvent) {
 watch(
   () => props.teamId,
   async (value) => {
-
-    if(value)
-      await fetchTeam(value);
+    if (value) await fetchTeam(value);
 
     responseMsg.value = "";
     await fillForm();
@@ -365,23 +363,24 @@ async function createTeam() {
   userId = optionSelect.value.id;
 
   //create team
-  await teamStore.createTeam(
-    selectedDirection.value,
-    title.value,
-    description.value,
-    shortname.value,
-    userId,
-    cabinet.value,
-    charterTeamFile.value,
-    documentFile.value,
-  ).then((msg) => {
+  await teamStore
+    .createTeam(
+      selectedDirection.value,
+      title.value,
+      description.value,
+      shortname.value,
+      userId,
+      cabinet.value,
+      charterTeamFile.value,
+      documentFile.value,
+    )
+    .then((msg) => {
       if (msg) responseMsg.value = msg;
       else {
-          responseMsg.value = "Сохранено";
-          props.onSaveChanges();
+        responseMsg.value = "Сохранено";
+        props.onSaveChanges();
       }
-  });
-
+    });
 }
 
 // обночить коллектив
@@ -417,15 +416,14 @@ async function updateTeam() {
   });
 }
 
-async function handleFileUpload(
-  event: { target: { files: File[] } },
-  document: boolean,
-) {
-  const file = event.target.files[0];
-
-  if (!document) charterTeamFile.value = file;
-  else {
-    documentFile.value = file;
+async function handleFileUpload(event: Event, document: boolean) {
+  const files = (event.target as HTMLInputElement).files;
+  if (files) {
+    const file = files[0];
+    if (!document) charterTeamFile.value = file;
+    else {
+      documentFile.value = file;
+    }
   }
 }
 
@@ -437,13 +435,13 @@ async function archiveTeam(id: number, isArchive: boolean) {
   if (res.isOK) teamObj.value.is_archive = isArchive;
 }
 
-function getLeader(team) {
+function getLeader(team: ITeam) {
   const leaders = [];
-  if (!team && !team.functions) return [];
+  if (!team || !team.functions) return [];
   for (let i = 0; i < team.functions.length; i++) {
     const func = team.functions[i];
-    if (func.title === TeamRoles.Leader) {
-      for (let io = 0; io < func.userFunctions.length; io++) {
+    if (func.title === TeamRoles.Leader && func.userFunctions) {
+      for (let io = 0; io < func.userFunctions?.length; io++) {
         const userFunc = func.userFunctions[io];
         leaders.push(userFunc.user);
       }

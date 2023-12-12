@@ -122,6 +122,7 @@ export const useEventStore = defineStore("events", () => {
   const menu_items = [
     {
       id: 1,
+      hidden:false,
       title: "Формат проведения",
       menu_types: [
         { id: 1, title: "Online", checked: true },
@@ -131,6 +132,7 @@ export const useEventStore = defineStore("events", () => {
     {
       id: 2,
       title: "Уровень",
+      hidden:false,
       menu_types: [
         { id: 1, title: "Внутривузовский", checked: true },
         { id: 2, title: "Межвузовский", checked: true },

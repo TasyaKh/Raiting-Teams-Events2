@@ -23,27 +23,27 @@
           <div class="alert alert-info">
             <div
               v-if="
-                !direction.functions ||
-                (direction.functions[0] &&
-                  direction.functions[0].userFunctions[0])
+                // !direction.functions ||
+                (direction.functions &&
+                  direction.functions[0]?.userFunctions)
               "
             >
               <p>
                 Руководитель:
-                {{ direction?.functions[0]?.userFunctions[0]?.user?.fullname }}
+                {{ direction.functions[0]?.userFunctions[0]?.user?.fullname }}
               </p>
 
               <p>
                 Почта:
                 {{
-                  direction?.functions[0]?.userFunctions[0]?.user?.email ?? "-"
+                  direction.functions[0]?.userFunctions[0]?.user?.email ?? "-"
                 }}
               </p>
               <p>
                 Телефон:
-                {{
-                  direction?.functions[0]?.userFunctions[0]?.user?.phone ?? "-"
-                }}
+               <span v-if="direction.functions && direction.functions[0]?.userFunctions"> {{
+                  direction.functions[0]?.userFunctions[0]?.user?.phone ?? "-"
+                }}</span>
               </p>
             </div>
             <div v-else>Руководитель не назначен</div>

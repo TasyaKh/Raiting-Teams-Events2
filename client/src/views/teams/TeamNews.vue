@@ -74,10 +74,10 @@
               <h5 class="card-title">{{ event.title }}</h5>
               <p class="card-text">
                 {{
-                  event.description?.length > 200
-                    ? event.description?.slice(0, 200) + "..."
-                    : "описания нет"
-                }}
+                      event.description && event.description?.length > 200
+                              ? event.description?.slice(0, 200) + "..."
+                              : "описания нет"
+                  }}
               </p>
               <p class="card-text">
                 <small class="text-muted"

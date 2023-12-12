@@ -53,7 +53,9 @@
           </template>
 
           <template #time>
-            {{ new Date(event.date_update).toLocaleDateString() }}
+            <span v-if="event.date_update"
+              >{{ new Date(event.date_update).toLocaleDateString() }}
+            </span>
           </template>
 
           <template #body>
@@ -112,8 +114,13 @@
                 <div class="style-elem">Даты начала/окончания:</div>
               </div>
               <div class="col-auto">
-                {{ new Date(event.dateStart).toLocaleDateString() }} -
-                {{ new Date(event.dateEnd).toLocaleDateString() }}
+                <span v-if="event.dateStart"
+                  >{{ new Date(event.dateStart).toLocaleDateString() }}
+                </span>
+                -
+                <span v-if="event.dateEnd"
+                  >{{ new Date(event.dateEnd).toLocaleDateString() }}
+                </span>
               </div>
             </div>
           </template>

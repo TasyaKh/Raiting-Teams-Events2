@@ -51,8 +51,18 @@
           <div class="row g-2">
             <div class="col-lg-auto col-md-auto col-sm-auto">
               <div class="image-container">
-                  <img v-if="item.user?.image" class="rounded-4" :src="item.user?.image" alt="" />
-                  <img v-else class="rounded-4" src="@/assets/icon/avatar.png" alt="" />
+                <img
+                  v-if="item.user?.image"
+                  class="rounded-4"
+                  :src="item.user?.image"
+                  alt=""
+                />
+                <img
+                  v-else
+                  class="rounded-4"
+                  src="@/assets/icon/avatar.png"
+                  alt=""
+                />
               </div>
             </div>
 
@@ -101,13 +111,13 @@
               <!--            info about participant-->
               <div class="row g-2">
                 <div class="col-12">
-                  <div class="title">{{ item.user.fullname }}</div>
+                  <div class="title">{{ item.user?.fullname }}</div>
                 </div>
                 <div class="col-12">
                   <div class="description">{{ item.function?.title }}</div>
                 </div>
                 <div class="col-12">
-                  <div class="group">{{ item.user.education_group }}</div>
+                  <div class="group">{{ item.user?.education_group }}</div>
                 </div>
               </div>
             </div>
@@ -160,10 +170,14 @@
         <tbody>
           <tr v-for="(it, index) in teamUsers" v-bind:key="index">
             <th scope="row">{{ index + 1 + offset }}</th>
-            <td>{{ it.user.fullname }}</td>
+            <td>{{ it.user?.fullname }}</td>
             <td>{{ it.function?.title }}</td>
-            <td>{{ it.user.education_group }}</td>
-            <td>{{ new Date(it.dateCreate).toLocaleDateString() }}</td>
+            <td>{{ it.user?.education_group }}</td>
+            <td>
+              <span v-if="it.dateCreate"
+                >{{ new Date(it.dateCreate).toLocaleDateString() }}
+              </span>
+            </td>
             <!--            edit info-->
             <td>
               <div

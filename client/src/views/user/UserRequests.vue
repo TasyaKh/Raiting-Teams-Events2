@@ -25,12 +25,12 @@
           <div class="member-info p-3">
             <div class="col">
               <div class="row">
-                <h4>{{ item.team.title }}</h4>
+                <h4>{{ item.team?.title }}</h4>
               </div>
               <div class="row">
                 Дата последнего рассмотрения: {{ item.date_update }}
               </div>
-              <div class="row">Статус вашей заявки: {{ item.status.name }}</div>
+              <div class="row">Статус вашей заявки: {{ item.status?.name }}</div>
               <div class="row">
                 Комментарий: {{ item.comment_leader ?? "-" }}
               </div>
