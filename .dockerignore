@@ -1,6 +1,0 @@
-**/node_modules/
-**/__pycache__/
-.env
-.git
-*.log
-docker-compose.yml

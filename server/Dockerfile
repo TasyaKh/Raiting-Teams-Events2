@@ -1,14 +1,12 @@
-# FROM ubuntu:20.04
-FROM node:16
+FROM node:16.20.2-alpine3.18
 
 WORKDIR /src
 
-COPY package*.json ./
-
-RUN npm install --legacy-peer-deps
-
 COPY . .
 
-RUN npm run build
+RUN yarn
+RUN npm rebuild --verbose sharp
 
-CMD [ "npm", "run", "start:dev" ]
+RUN yarn run build
+
+CMD [ "yarn", "run", "start:dev" ]
