@@ -8,5 +8,3 @@ RUN yarn run build-only
 
 FROM nginx:1.25.3-alpine AS production-stage
 COPY --from=build /src/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
-CMD ["nginx", "-g", "daemon off;"]
