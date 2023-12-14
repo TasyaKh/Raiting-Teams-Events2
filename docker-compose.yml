@@ -49,11 +49,12 @@ services:
       context: ./client
       dockerfile: Dockerfile
     ports:
-      - ${DOCKER_FE_PORT}:${FE_PORT}
+      - ${DOCKER_FE_PORT}:80
+    restart: on-failure:10
     environment:
       - VITE_PUBLIC_HOST=localhost
       - PORT=${FE_PORT}
-      - PROXY=http://${DOCKER_CONTAINER_PREFIX}${DOCKER_BE_CONTAINER_NAME}:${BE_PORT}
+      - PROXY=http://localhost:${DOCKER_BE_PORT}
     depends_on:
       - ${DOCKER_BE_CONTAINER_NAME}
     networks:
