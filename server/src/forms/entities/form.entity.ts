@@ -18,10 +18,6 @@ export class Form {
     @Column()
     description: string
 
-    // @ApiProperty()
-    // @Column("simple-array")
-    // fields_id: string
-
 
     @ApiProperty()
     @ManyToOne(()=>Team, (team)=> team.id, {onDelete:'CASCADE'})

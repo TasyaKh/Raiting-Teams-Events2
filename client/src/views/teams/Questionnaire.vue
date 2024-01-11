@@ -25,6 +25,7 @@ import axios from "axios";
 import { onBeforeMount, ref } from "vue";
 import { useFormStore } from "@/store/form_store";
 import { useRoute } from "vue-router";
+import { useTeamStore } from "@/store/team_store";
 
 const route = useRoute();
 
@@ -33,6 +34,7 @@ const idTeam = Number(route.params.id);
 let idForm: number;
 
 const formStore = useFormStore();
+const teamStore = useTeamStore();
 
 const data = ref();
 const deletedFields = ref();
@@ -56,39 +58,46 @@ const addInput = () => {
   data.value.push({ title: "", required: true });
 };
 
+
+const removeInput = (index: number) => {
+  if (data.value && idForm) {
+    deletedFields.value.push(data.value[index]);
+    data.value.splice(index, 1);
+  }
+  else{
+    data.value.splice(index, 1);
+  }
+};
+
 const submit = async () => {
   const promises = [];
+  console.log(idForm);
 
   for (let i = data.value.length - 1; i >= 0; i--) {
     const form = data.value[i];
-    // if (!form.title.trim()) {
-    //   removeInput(i);
-    // } else {
+    if (!form.title.trim()) {
+      removeInput(i);
+    } else 
     if (form.id == null) {
       const promise = createFormFields(form.title, idForm, form.required);
       promises.push(promise);
     }
   }
 
-  // const results = await Promise.all(promises);
-  // const idFields = results.filter((result) => result !== null).join("\n");
+  const results = await Promise.all(promises);
+  const idFields = results.filter((result) => result !== null).join("\n");
+
 
   if (idForm == undefined) {
-    await createForm(idTeam);
+    createForm(idTeam);
   } else {
+    //updateForm(idForm, form.title, form.required);
     await archiveFields(deletedFields.value, true);
-
-    // updateForm(idForm)
   }
   //console.log(idFields);
 };
 
-const removeInput = (index: number) => {
-  if (data.value[index]) {
-    deletedFields.value.push(data.value[index]);
-    data.value.splice(index, 1);
-  }
-};
+
 
 async function createFormFields(
   title: string,
@@ -117,6 +126,8 @@ async function createFormFields(
 async function createForm(idTeam: number) {
   responseMsg.value = "сохранено";
 
+  //let team = await teamStore.fetchTeam(idTeam);
+
   await axios
     .post("/api/forms", {
       team_id: idTeam,
@@ -126,6 +137,7 @@ async function createForm(idTeam: number) {
         responseMsg.value = err.response.data.message;
       }
     });
+    //console.log(team);
 }
 
 async function archiveFields(deletedFields: [], is_archive: boolean) {
@@ -148,18 +160,13 @@ async function archiveFields(deletedFields: [], is_archive: boolean) {
   }
 }
 
-//  async function updateForm(id: number, fields_id: string) {
-
-// responseMsg.value = "сохранено";
-// await axios.put("/api/forms/" + id, {
-//     fields_id: fields_id,
-// })
-//     .catch((err) => {
-//         if (err.response) {
-//             responseMsg.value = err.response.data.message
-//         }
-//     })
-// }
+ async function updateForm(
+  index: number, 
+  title: string,
+  required: boolean,) {
+    removeInput(index);
+    createFormFields(title, index, required)
+}
 </script>
 
 <style lang="scss" scoped>

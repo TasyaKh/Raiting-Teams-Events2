@@ -31,8 +31,8 @@ export class FormsService {
       .getOne()
     let res_form_str = res_forms.id
   
-    return res_form_str;
-  }
+          return res_form_str;
+      }
 
   async findOnFormFields(team_id: number) {
 
@@ -71,14 +71,15 @@ export class FormsService {
     return userForm;
   }
 
-  async createForm(createFormDto: createFormDto): Promise<Form> {
+  async createForm(createFormDto: createFormDto) {
 
-    let form = await this.formRepository.save({
+
+    let form = await this.formRepository.save({ 
+      team:createFormDto.team_id,
       ...createFormDto,
       date: new Date(),
       description: "description",
     })
-
     return form;
   }
 

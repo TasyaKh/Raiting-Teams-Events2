@@ -36,7 +36,7 @@
           <button type="button" class="close-btn" data-bs-dismiss="modal">
             Закрыть
           </button>
-          <button class="send-btn">Отправить ответы</button>
+          <button class="send-btn" @click="send">Отправить ответы</button>
         </div>
       </div>
     </div>
@@ -50,6 +50,7 @@ import { useRoute } from "vue-router";
 import { useTeamStore } from "@/store/team_store";
 import { usePermissionsStore } from "@/store/permissions_store";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import axios from "axios";
 
 const permissions_store = usePermissionsStore();
 
@@ -61,6 +62,7 @@ const idTeam = Number(route.params.id);
 const formStore = useFormStore();
 const userReq = ref(); //проверить не подавал ли уже юзер заявку в этот колелктив
 const data = ref();
+const responseMsg = ref();
 
 defineProps({
   modelValue: {
@@ -75,6 +77,32 @@ onBeforeMount(async () => {
 
 async function fetchFormFields() {
   data.value = await formStore.fetchFormFields(idTeam);
+}
+
+const send = async () => {
+  
+  console.log(idTeam);
+  console.log(userReq.value);
+  console.log(data.value);
+
+  createRequisition(idTeam, userReq.value, data.value.title)
+};
+
+async function createRequisition(idTeam: number, user_id: number, fields: string[]) {
+  responseMsg.value = "сохранено";
+
+  await axios
+    .post("/api/teams/requisitions/new", {
+      userId: user_id,
+      teamId: idTeam,
+      fields: fields
+    })
+    .catch((err) => {
+      if (err.response) {
+        responseMsg.value = err.response.data.message;
+      }
+    });
+    //console.log(team);
 }
 
 async function checkRequired() {}

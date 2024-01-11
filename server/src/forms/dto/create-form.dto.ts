@@ -1,8 +1,10 @@
 import {IsBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, Length} from 'class-validator'
 import { Type } from 'class-transformer'
 import { Form } from '../entities/form.entity'
+import { Team } from 'src/teams/entities/team.entity'
 
 export class createUserFormDto{
+    
     @IsOptional()
     @IsNotEmpty({ message: 'Поле пустое' })
     value:string
@@ -14,23 +16,17 @@ export class createUserFormDto{
     @IsNumber()
     @Type(() => Number)
     field:number
-
 }
 
 export class createFormDto{
-    // @IsOptional()
-    // @IsNotEmpty({ message: 'Поле пустое' })
-    // fields_id:string
-
-    @IsNumber()
+    
     @Type(() => Number)
-    team_id:number
+    @IsNumber()
+    team_id:Team
 }
 
 export class createFormFieldsDto{
 
-    // @IsNumber()
-    // @Type(() => Number)
     @Type(() => Number)
     @IsNumber()
     form:Form

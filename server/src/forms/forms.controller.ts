@@ -17,6 +17,7 @@ export class FormsController {
   @UsePipes(new ValidationPipe)
   @ApiOperation({ summary: "Создать новую анкету" })
   create(@Body() createFormDto: createFormDto) {
+    console.log(createFormDto)
     return this.formsService.createForm(createFormDto);
   }
 
