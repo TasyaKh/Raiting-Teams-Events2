@@ -29,7 +29,7 @@
             <div class="question-label">
               {{ form.title }}{{ form.required ? "*" : "" }}
             </div>
-            <textarea class="input-answer" />
+            <textarea class="input-answer" v-model="form.answer" />
           </div>
         </div>
         <div class="wrap-button">
@@ -80,15 +80,44 @@ async function fetchFormFields() {
 }
 
 const send = async () => {
-  
-  console.log(idTeam);
-  console.log(userReq.value);
-  console.log(data.value);
 
-  createRequisition(idTeam, userReq.value, data.value.title)
+  const answerArray = [];
+  for (let i = data.value.length - 1; i >= 0; i--) {
+    const form = data.value[i];
+    answerArray.push(form.answer);
+  }
+  console.log(idTeam);
+  console.log(permissions_store.user_id);
+  console.log(answerArray);
+
+  createRequisition(35, 6, ["string"]);
 };
 
-async function createRequisition(idTeam: number, user_id: number, fields: string[]) {
+async function createRequisition(
+  idTeam: number,
+  user_id: number,
+  fields: string[],
+) {
+  responseMsg.value = "сохранено";
+
+  try {
+    const response = await axios.post("/api/teams/requisitions/new", {
+      userId: user_id,
+      teamId: idTeam,
+      fields: fields,
+    });
+    const strId: string = response.data.id.toString();
+    //console.log(response.data.id)
+    return strId;
+  } catch (error: any) {
+    if (error.response) {
+      responseMsg.value = error.response.data.message;
+    }
+    return null;
+  }
+}
+
+async function createRequisitio(idTeam: number, user_id: number, fields: string[]) {
   responseMsg.value = "сохранено";
 
   await axios
