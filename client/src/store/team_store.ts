@@ -11,7 +11,7 @@ import type { ICreateRequisition } from "@/store/models/forms/requisition-fields
 export const useTeamStore = defineStore("teams", () => {
   const layout = ref(true);
   const apiRequest = new ApiRequest();
-
+  const visits = ref([]);
   async function getUserRequisitions(id: number) {
     return (await axios.get("/api/teams/requisitions/user/" + id)).data;
   }
@@ -21,7 +21,16 @@ export const useTeamStore = defineStore("teams", () => {
       return await axios.delete("/api/teams/requisition/" + id);
     });
   }
-
+  async function fetchVisits(date_visit_start: string, date_visit_end: string, team_id: number) {
+    const res = await axios.get("/api/schedule/visits", {
+      params: {
+        date_visit_start,
+        date_visit_end,
+        team_id,
+      },
+    });
+    return res.data;
+  }
   // data will be returned as index 0 - is data, index 1 is count
   async function fetchTeamsOfDirection(direction: number = -1) {
     const res = await axios.get("/api/teams/of-direction", {
@@ -306,12 +315,11 @@ export const useTeamStore = defineStore("teams", () => {
     fetchTeam,
     updateTeam,
     archiveTeam,
-
     deleteRequisition,
     updateRequisition,
     fetchRequisitions,
     getUserRequisitions,
-
+    fetchVisits,
     fetchTeamsSearch,
     addImage,
     fetchDirections,
