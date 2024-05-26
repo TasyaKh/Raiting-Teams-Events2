@@ -1,6 +1,7 @@
 <template>
   <!--    calendar-->
   <div class="my-3" style="width: max-content">
+    <ModalsChedule/>
     <DropdownBtn>
       <template #img>
         <FontAwesomeIcon icon="calendar" />
@@ -49,6 +50,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { computed, ref } from "vue";
 import { DatePicker } from "v-calendar";
 import DropdownBtn from "@/components/Buttons/DropdownBtn.vue";
+import ModalsChedule from "@/components/modals/ModalsChedule.vue";
 
 defineProps<{
   teamId: number;
