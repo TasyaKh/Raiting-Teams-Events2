@@ -60,6 +60,14 @@
           <span option>
             <select class="form-select">
               <option>Все</option>
+              <option>Для занятий вокалом</option>
+              <option>Для занятий хореографией</option>
+              <option>Со сценой</option>
+              <option>С муз. инструментами</option>
+              <option>Доступные без ключа</option>
+              <option>Компьютерные</option>
+              <option>С проектором</option>
+              
             </select>
           </span>
         </GroupElements>
@@ -68,6 +76,23 @@
           <span option>
             <select class="form-select">
               <option>Другие</option>
+              <option>2</option>
+              <option>3</option>
+              <option>7</option>
+              <option>8</option>
+              <option>10</option>
+              <option>А</option>
+              <option>Б</option>
+              <option>В</option>
+              <option>Г</option>
+              <option>Д</option>
+              <option>Е</option>
+              <option>Ж</option>
+              <option>И</option>
+              <option>К</option>
+              <option>М</option>
+              <option>П</option>
+              <option>Т</option>
             </select>
           </span>
         </GroupElements>
