@@ -4,8 +4,8 @@
         <i class="fas fa-pencil-alt"></i> 
     </button>
         <div class="modal fade" id="exampleModal_2" ref="exampleModal_2" tabindex="-1" aria-labelledby="exampleModalLabel_1" aria-hidden="true" v-show="isModalVisible" :class="{ 'd-none': !isModalVisible }">
-            <transition name="modal-fade">
-                <div class="modal-dialog">
+            <transition name="modal fade">
+                <div class="modal-dialog" v-show = "showModal">
                     <div class="modal-content">
                         <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
                         <h1 class="form_title" id="exampleModalLabel_1">Редактирование расписания в коллективе "Калина"</h1>
