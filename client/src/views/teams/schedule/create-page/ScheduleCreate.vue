@@ -103,6 +103,11 @@
           <span option>
             <select class="form-select">
               <option>Любая</option>
+              <option>>10 человек</option>
+              <option>>20 человек</option>
+              <option>>50 человек</option>
+              <option>>100 человек</option>
+              
             </select>
           </span>
         </GroupElements>
